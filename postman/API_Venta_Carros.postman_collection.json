@@ -1,0 +1,308 @@
+{
+  "info": {
+    "_postman_id": "3bb27d71-14d5-4a57-b1db-1d7864276e43",
+    "name": "API de Venta de Carros",
+    "description": "Colección para probar los endpoints de la API de Venta de Carros con FastAPI. Inicia el servidor local antes de ejecutar las solicitudes. Ejecuta las solicitudes de administración en orden para que carroId se configure automáticamente.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:1002",
+      "type": "string"
+    },
+    {
+      "key": "carroId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Inicio",
+      "item": [
+        {
+          "name": "Verificar que la API funciona",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/holamundo",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "holamundo"]
+            },
+            "description": "Comprueba que el servidor está activo y devuelve las rutas principales."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde con HTTP 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Confirma que la API está funcionando', function () {",
+                  "    pm.expect(pm.response.json().mensaje).to.eql('Hola mundo, API de venta de carros funcionando');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Carros - consultas",
+      "item": [
+        {
+          "name": "Listar todos los carros",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/carros",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "carros"]
+            },
+            "description": "Devuelve todos los carros actualmente almacenados en memoria."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde con HTTP 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Devuelve una lista de carros', function () {",
+                  "    pm.expect(pm.response.json()).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar carros disponibles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/carros?disponibles=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "carros"],
+              "query": [
+                {
+                  "key": "disponibles",
+                  "value": "true"
+                }
+              ]
+            },
+            "description": "Filtra y devuelve únicamente los carros disponibles."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde con HTTP 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Todos los carros devueltos están disponibles', function () {",
+                  "    pm.response.json().forEach(function (carro) {",
+                  "        pm.expect(carro.disponible).to.eql(true);",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar carro con ID 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/carros/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "carros", "1"]
+            },
+            "description": "Consulta el Toyota Corolla de ejemplo usando su ID."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde con HTTP 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('El carro tiene el ID solicitado', function () {",
+                  "    pm.expect(pm.response.json().id).to.eql(1);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar carro inexistente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/carros/9999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "carros", "9999"]
+            },
+            "description": "Ejemplo de respuesta de error cuando el ID no existe."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde con HTTP 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test('Informa que el carro no existe', function () {",
+                  "    pm.expect(pm.response.json().detail).to.eql('Carro no encontrado');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Carros - administración",
+      "item": [
+        {
+          "name": "Crear carro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marca\": \"Mazda\",\n  \"modelo\": \"Mazda 3\",\n  \"anio\": 2023,\n  \"precio\": 92000000,\n  \"kilometraje\": 18000,\n  \"transmision\": \"Automática\",\n  \"combustible\": \"Gasolina\",\n  \"disponible\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/carros",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "carros"]
+            },
+            "description": "Crea un carro y guarda el ID de la respuesta en la variable carroId para las siguientes solicitudes."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde con HTTP 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test('Devuelve el carro creado con un ID', function () {",
+                  "    const carro = pm.response.json();",
+                  "    pm.expect(carro.id).to.be.a('number');",
+                  "    pm.expect(carro.marca).to.eql('Mazda');",
+                  "    pm.collectionVariables.set('carroId', String(carro.id));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar carro creado",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marca\": \"Mazda\",\n  \"modelo\": \"Mazda 3 Touring\",\n  \"anio\": 2023,\n  \"precio\": 90000000,\n  \"kilometraje\": 19000,\n  \"transmision\": \"Automática\",\n  \"combustible\": \"Gasolina\",\n  \"disponible\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/carros/{{carroId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "carros", "{{carroId}}"]
+            },
+            "description": "Actualiza el carro creado en el paso anterior. Ejecuta primero la solicitud Crear carro."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde con HTTP 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Devuelve el carro actualizado', function () {",
+                  "    pm.expect(pm.response.json().modelo).to.eql('Mazda 3 Touring');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar carro creado",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/carros/{{carroId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "carros", "{{carroId}}"]
+            },
+            "description": "Elimina el carro creado y actualizado en los pasos anteriores."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde con HTTP 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Confirma la eliminación del carro', function () {",
+                  "    pm.expect(pm.response.json().mensaje).to.eql('Carro eliminado correctamente');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

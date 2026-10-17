@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explora, publica y administra carros en venta."
+    />
+    <meta name="theme-color" content="#f5f6f2" />
+    <title>Motoría — autos que mueven tu mundo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Motoría, inicio">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M5 19.5h22l-2-6.1a3 3 0 0 0-2.8-2H9.8a3 3 0 0 0-2.8 2L5 19.5Z" fill="currentColor" />
+            <path d="M4.5 19.5v5a1.5 1.5 0 0 0 1.5 1.5h2v-3h16v3h2a1.5 1.5 0 0 0 1.5-1.5v-5H4.5Z" fill="currentColor" />
+            <circle cx="10" cy="20" r="1.5" fill="#f3f5f0" />
+            <circle cx="22" cy="20" r="1.5" fill="#f3f5f0" />
+          </svg>
+        </span>
+        <span>motoría<span class="brand-period">.</span></span>
+      </a>
+      <nav class="header-nav" aria-label="Navegación principal">
+        <a class="nav-link nav-link-active" href="#inventario">Inventario</a>
+        <a class="nav-link" href="#como-funciona">Nosotros</a>
+        <a class="nav-link" href="/docs" target="_blank" rel="noreferrer">API Docs <span aria-hidden="true">↗</span></a>
+      </nav>
+      <button class="button button-dark header-cta" id="header-add-button" type="button">
+        Publicar un carro <span aria-hidden="true">↗</span>
+      </button>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="eyebrow-dot"></span> TU PRÓXIMO AUTO TE ESTÁ ESPERANDO</div>
+          <h1 id="hero-title">Encuentra el auto que <span>mueve tu mundo.</span></h1>
+          <p>Una selección especial de carros para acompañarte en cada camino. El tuyo puede estar aquí.</p>
+          <div class="hero-actions">
+            <a class="button button-lime" href="#inventario">Explorar inventario <span aria-hidden="true">↘</span></a>
+            <span class="hero-note"><span class="hero-note-mark">✓</span> Opciones para cada camino</span>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="art-circle art-circle-one"></div>
+          <div class="art-circle art-circle-two"></div>
+          <span class="art-label art-label-top">MOTORÍA / SELECCIÓN</span>
+          <img src="/static/car-illustration.svg" alt="" />
+          <span class="art-label art-label-bottom">01 — 04 / BOGOTÁ, CO</span>
+          <span class="art-sparkle">✳</span>
+        </div>
+        <div class="hero-index" aria-hidden="true">01 / 03</div>
+      </section>
+
+      <section class="trust-strip" id="como-funciona" aria-label="Ventajas">
+        <div><span class="trust-icon">✳</span><span>Autos seleccionados</span></div>
+        <div><span class="trust-icon">↗</span><span>Compra sin complicaciones</span></div>
+        <div><span class="trust-icon">♡</span><span>Tu próximo capítulo empieza aquí</span></div>
+      </section>
+
+      <section class="inventory-section" id="inventario" aria-labelledby="inventory-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">NUESTRO INVENTARIO</p>
+            <h2 id="inventory-title">Carros para <span>descubrir.</span></h2>
+          </div>
+          <button class="button button-dark desktop-add" id="inventory-add-button" type="button">
+            <span class="plus-icon" aria-hidden="true">+</span> Publicar carro
+          </button>
+        </div>
+
+        <div class="inventory-toolbar">
+          <div class="inventory-count"><span class="count-pulse"></span><span id="result-count">Cargando inventario...</span></div>
+          <div class="inventory-controls">
+            <label class="search-box">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.5 4.5"></path></svg>
+              <input id="search-input" type="search" placeholder="Buscar marca o modelo" autocomplete="off" aria-label="Buscar marca o modelo" />
+            </label>
+            <label class="filter-select-wrap">
+              <span class="sr-only">Filtrar inventario</span>
+              <select id="availability-filter">
+                <option value="all">Todos los carros</option>
+                <option value="available">Disponibles</option>
+                <option value="unavailable">No disponibles</option>
+              </select>
+              <span aria-hidden="true">⌄</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="status-banner" id="status-banner" role="alert" hidden></div>
+        <div class="stats-row" aria-label="Resumen del inventario">
+          <div class="stat-item"><span class="stat-value" id="stat-total">—</span><span class="stat-label">en inventario</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat-item"><span class="stat-value" id="stat-available">—</span><span class="stat-label">disponibles</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat-item"><span class="stat-value" id="stat-brands">—</span><span class="stat-label">marcas distintas</span></div>
+          <span class="stats-caption">ACTUALIZADO EN TIEMPO REAL</span>
+        </div>
+
+        <div class="car-grid" id="car-grid" aria-live="polite" aria-busy="true"></div>
+        <div class="empty-state" id="empty-state" hidden>
+          <span class="empty-icon" aria-hidden="true">⌕</span>
+          <h3>No encontramos ese carro</h3>
+          <p>Prueba otra búsqueda o cambia el filtro del inventario.</p>
+          <button class="button button-dark" id="reset-filters" type="button">Limpiar búsqueda</button>
+        </div>
+      </section>
+
+      <section class="closing-banner">
+        <div>
+          <p class="section-kicker">¿TIENES UN AUTO PARA VENDER?</p>
+          <h2>Tu próximo comprador está <span>más cerca.</span></h2>
+        </div>
+        <button class="button button-lime" id="closing-add-button" type="button">Publicar mi carro <span aria-hidden="true">↗</span></button>
+        <div class="closing-orbit" aria-hidden="true"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="brand footer-brand" href="/" aria-label="Motoría, inicio">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M5 19.5h22l-2-6.1a3 3 0 0 0-2.8-2H9.8a3 3 0 0 0-2.8 2L5 19.5Z" fill="currentColor" /><path d="M4.5 19.5v5a1.5 1.5 0 0 0 1.5 1.5h2v-3h16v3h2a1.5 1.5 0 0 0 1.5-1.5v-5H4.5Z" fill="currentColor" /><circle cx="10" cy="20" r="1.5" fill="#f3f5f0" /><circle cx="22" cy="20" r="1.5" fill="#f3f5f0" /></svg>
+        </span>
+        <span>motoría<span class="brand-period">.</span></span>
+      </a>
+      <p>Hecho para encontrar tu próximo camino.</p>
+      <a class="footer-docs" href="/docs" target="_blank" rel="noreferrer">Documentación de la API ↗</a>
+    </footer>
+
+    <dialog class="car-dialog" id="car-dialog" aria-labelledby="dialog-title">
+      <form class="car-form" id="car-form">
+        <div class="dialog-heading">
+          <div>
+            <p class="section-kicker">MOTORÍA / INVENTARIO</p>
+            <h2 id="dialog-title">Publica tu carro</h2>
+          </div>
+          <button class="dialog-close" id="dialog-close" type="button" aria-label="Cerrar formulario">×</button>
+        </div>
+        <p class="dialog-description">Cuéntanos un poco sobre el vehículo para agregarlo al inventario.</p>
+        <div class="form-grid">
+          <label class="form-field"><span>Marca</span><input name="marca" required minlength="1" maxlength="60" placeholder="Ej. Mazda" /></label>
+          <label class="form-field"><span>Modelo</span><input name="modelo" required minlength="1" maxlength="60" placeholder="Ej. Mazda 3" /></label>
+          <label class="form-field"><span>Año</span><input name="anio" type="number" min="1950" max="2100" required placeholder="2023" /></label>
+          <label class="form-field"><span>Precio (COP)</span><input name="precio" type="number" min="1" step="0.01" required placeholder="92000000" /></label>
+          <label class="form-field"><span>Kilometraje (km)</span><input name="kilometraje" type="number" min="0" step="1" required placeholder="18000" /></label>
+          <label class="form-field"><span>Transmisión</span><input name="transmision" required maxlength="30" placeholder="Automática" /></label>
+          <label class="form-field"><span>Combustible</span><input name="combustible" required maxlength="30" placeholder="Gasolina" /></label>
+          <label class="availability-field"><input name="disponible" type="checkbox" checked /><span class="custom-checkbox" aria-hidden="true">✓</span><span>Disponible para la venta</span></label>
+        </div>
+        <div class="form-error" id="form-error" role="alert" hidden></div>
+        <div class="dialog-actions">
+          <button class="button button-light" id="dialog-cancel" type="button">Cancelar</button>
+          <button class="button button-dark" id="submit-button" type="submit">Publicar carro <span aria-hidden="true">↗</span></button>
+        </div>
+      </form>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
